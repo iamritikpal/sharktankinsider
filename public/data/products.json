@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "BoAt Airdopes 131",
+    "description": "Wireless earbuds with crystal clear sound quality and long battery life",
+    "price": "₹1,299",
+    "originalPrice": "₹2,990", 
+    "image": "/images/boat-airdopes.jpg",
+    "affiliateLink": "https://affiliate-link.com/boat-airdopes",
+    "category": "Electronics",
+    "featured": true,
+    "discount": "57% OFF"
+  },
+  {
+    "id": 2,
+    "name": "Lenskart Blue Cut Glasses", 
+    "description": "Computer glasses with blue light protection for digital eye strain",
+    "price": "₹999",
+    "originalPrice": "₹1,999",
+    "image": "/images/lenskart-glasses.jpg",
+    "affiliateLink": "https://affiliate-link.com/lenskart-glasses",
+    "category": "Health & Wellness",
+    "featured": true,
+    "discount": "50% OFF"
+  },
+  {
+    "id": 3,
+    "name": "Paper Boat Drinks Pack",
+    "description": "Traditional Indian flavored drinks in convenient tetra packs",
+    "price": "₹240",
+    "originalPrice": "₹300",
+    "image": "/images/paper-boat-drinks.jpg", 
+    "affiliateLink": "https://affiliate-link.com/paper-boat",
+    "category": "Food & Beverages",
+    "featured": false,
+    "discount": "20% OFF"
+  },
+  {
+    "id": 4,
+    "name": "Mamaearth Vitamin C Serum",
+    "description": "Natural vitamin C face serum for glowing and radiant skin",
+    "price": "₹399", 
+    "originalPrice": "₹599",
+    "image": "/images/mamaearth-serum.jpg",
+    "affiliateLink": "https://affiliate-link.com/mamaearth-serum",
+    "category": "Beauty & Personal Care",
+    "featured": true,
+    "discount": "33% OFF"
+  },
+  {
+    "id": 5,
+    "name": "Noise ColorFit Pro 4",
+    "description": "Smart fitness watch with health monitoring and GPS tracking",
+    "price": "₹2,999",
+    "originalPrice": "₹4,999", 
+    "image": "/images/noise-smartwatch.jpg",
+    "affiliateLink": "https://affiliate-link.com/noise-smartwatch",
+    "category": "Electronics",
+    "featured": false,
+    "discount": "40% OFF"
+  },
+  {
+    "id": 6,
+    "name": "Sleepy Baby Diapers",
+    "description": "Soft and comfortable baby diapers with 12-hour protection",
+    "price": "₹849",
+    "originalPrice": "₹1,199",
+    "image": "/images/sleepy-diapers.jpg",
+    "affiliateLink": "https://affiliate-link.com/sleepy-diapers", 
+    "category": "Baby Care",
+    "featured": false,
+    "discount": "29% OFF"
+  }
+]

@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Shark Tank Professional Design System
+All colors MUST be HSL for proper theming
+*/
+
+@layer base {
+  :root {
+    /* Base colors */
+    --background: 0 0% 98%;
+    --foreground: 210 12% 15%;
+
+    /* Card system */
+    --card: 0 0% 100%;
+    --card-foreground: 210 12% 15%;
+    --card-hover: 210 45% 98%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 12% 15%;
+
+    /* Shark Tank blue palette */
+    --shark-blue: 210 85% 45%;
+    --shark-blue-light: 210 75% 55%;
+    --shark-blue-dark: 210 90% 35%;
+    
+    --primary: 210 85% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 210 90% 35%;
+
+    /* Professional secondary colors */
+    --secondary: 210 20% 95%;
+    --secondary-foreground: 210 12% 15%;
+    --secondary-hover: 210 25% 92%;
+
+    /* Accent and success colors */
+    --accent: 160 75% 45%;
+    --accent-foreground: 0 0% 100%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+
+    /* Muted colors */
+    --muted: 210 15% 96%;
+    --muted-foreground: 210 8% 45%;
+
+    /* Alert colors */
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --warning: 35 85% 55%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Borders and inputs */
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 210 85% 45%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--shark-blue)), hsl(var(--shark-blue-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--shark-blue-dark)) 0%, hsl(var(--shark-blue)) 50%, hsl(var(--accent)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(210 25% 98%) 100%);
+    --gradient-overlay: linear-gradient(180deg, transparent 0%, hsl(210 15% 5% / 0.8) 100%);
+
+    /* Shadows */
+    --shadow-card: 0 4px 20px -4px hsl(210 20% 20% / 0.1);
+    --shadow-card-hover: 0 8px 30px -6px hsl(210 20% 20% / 0.15);
+    --shadow-primary: 0 8px 25px -8px hsl(var(--shark-blue) / 0.3);
+    --shadow-glow: 0 0 40px hsl(var(--shark-blue) / 0.2);
+
+    /* Animations and transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Base colors for dark mode */
+    --background: 210 15% 8%;
+    --foreground: 210 15% 95%;
+
+    /* Card system */
+    --card: 210 15% 10%;
+    --card-foreground: 210 15% 95%;
+    --card-hover: 210 15% 12%;
+
+    --popover: 210 15% 10%;
+    --popover-foreground: 210 15% 95%;
+
+    /* Shark Tank blue palette for dark */
+    --primary: 210 75% 55%;
+    --primary-foreground: 210 15% 8%;
+    --primary-hover: 210 80% 60%;
+
+    /* Dark mode secondary colors */
+    --secondary: 210 15% 15%;
+    --secondary-foreground: 210 15% 95%;
+    --secondary-hover: 210 15% 18%;
+
+    /* Accent colors for dark */
+    --accent: 160 65% 50%;
+    --accent-foreground: 210 15% 8%;
+    --success: 145 55% 47%;
+    --success-foreground: 210 15% 8%;
+
+    /* Muted colors for dark */
+    --muted: 210 15% 15%;
+    --muted-foreground: 210 10% 60%;
+
+    /* Borders and inputs for dark */
+    --border: 210 15% 20%;
+    --input: 210 15% 20%;
+    --ring: 210 75% 55%;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--shark-blue-light)), hsl(var(--shark-blue)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--shark-blue)) 0%, hsl(var(--shark-blue-light)) 50%, hsl(var(--accent)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(210 15% 10%) 0%, hsl(210 15% 12%) 100%);
+
+    /* Dark mode shadows */
+    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    --shadow-card-hover: 0 8px 30px -6px hsl(0 0% 0% / 0.4);
+    --shadow-primary: 0 8px 25px -8px hsl(var(--shark-blue) / 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Custom utility classes for our design system */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-card-hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .shadow-primary {
+    box-shadow: var(--shadow-primary);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-fast {
+    transition: var(--transition-fast);
+  }
+}

@@ -1,0 +1,31 @@
+services:
+  vite-app:
+    build: .
+    container_name: vite-app
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vite.rule=Host(`sharktankinsider.shop`)"
+      - "traefik.http.routers.vite.entrypoints=web"
+      - "traefik.http.services.vite.loadbalancer.server.port=8080"
+    networks:
+      - web
+
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "8081:80"
+      - "8082:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
