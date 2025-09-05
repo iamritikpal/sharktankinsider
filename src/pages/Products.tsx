@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ProductCard from '@/components/ProductCard';
+import SEO from '@/components/SEO';
 
 interface Product {
   id: number;
@@ -183,9 +184,67 @@ const Products = () => {
     );
   }
 
+  // Generate SEO data based on current filters
+  const getSEOData = () => {
+    const category = selectedCategory !== 'all' ? selectedCategory : '';
+    const search = searchTerm;
+    
+    let title = "Shark Tank Products";
+    let description = "Discover innovative products from India's most successful entrepreneurs featured on Shark Tank India.";
+    let keywords = "shark tank products, indian startups, entrepreneur products, shark tank india";
+    
+    if (category) {
+      title = `${category} Products from Shark Tank India`;
+      description = `Explore ${category.toLowerCase()} products from successful Shark Tank India entrepreneurs. Get exclusive deals and support innovative Indian startups.`;
+      keywords = `${category.toLowerCase()}, shark tank products, indian startups, ${category.toLowerCase()} deals`;
+    }
+    
+    if (search) {
+      title = `Search Results for "${search}" - Shark Tank Products`;
+      description = `Find ${search} products from Shark Tank India entrepreneurs. Discover innovative solutions and exclusive deals.`;
+      keywords = `${search}, shark tank products, indian startups, ${search} deals`;
+    }
+    
+    return { title, description, keywords };
+  };
+
+  const seoData = getSEOData();
+
   return (
-    <div className="min-h-screen bg-background pt-20">
-      <div className="container mx-auto px-4 py-8">
+    <>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        canonical={`https://sharktankinsider.shop/products${searchParams.toString() ? '?' + searchParams.toString() : ''}`}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": seoData.title,
+          "description": seoData.description,
+          "url": `https://sharktankinsider.shop/products${searchParams.toString() ? '?' + searchParams.toString() : ''}`,
+          "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": filteredProducts.length,
+            "itemListElement": filteredProducts.slice(0, 10).map((product, index) => ({
+              "@type": "Product",
+              "position": index + 1,
+              "name": product.name,
+              "description": product.description,
+              "image": product.image.startsWith('data:') ? undefined : `https://sharktankinsider.shop${product.image}`,
+              "offers": {
+                "@type": "Offer",
+                "price": product.price.replace(/[₹,]/g, ''),
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock"
+              },
+              "category": product.category
+            }))
+          }
+        }}
+      />
+      <div className="min-h-screen bg-background pt-20">
+        <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold mb-4">Shark Tank Products</h1>
@@ -304,8 +363,9 @@ const Products = () => {
             ))}
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

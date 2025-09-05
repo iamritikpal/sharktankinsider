@@ -4,6 +4,7 @@ import { ArrowRight, Star, TrendingUp, Users, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import ProductCard from '@/components/ProductCard';
+import SEO from '@/components/SEO';
 import heroImage from '@/assets/hero-image.jpg';
 
 interface Product {
@@ -80,7 +81,44 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <SEO
+        title="SharkTankInsider - Discover Shark Tank Products & Success Stories"
+        description="Explore curated affiliate products from successful Shark Tank India entrepreneurs. Read inspiring success stories, get exclusive deals, and support innovative Indian startups."
+        keywords="shark tank india, affiliate products, entrepreneur stories, indian startups, exclusive deals, business success"
+        canonical="https://sharktankinsider.shop/"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "SharkTankInsider",
+          "url": "https://sharktankinsider.shop",
+          "description": "Discover curated affiliate products from Shark Tank India entrepreneurs",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://sharktankinsider.shop/products?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          },
+          "mainEntity": {
+            "@type": "ItemList",
+            "name": "Featured Shark Tank Products",
+            "itemListElement": featuredProducts.map((product, index) => ({
+              "@type": "Product",
+              "position": index + 1,
+              "name": product.name,
+              "description": product.description,
+              "image": product.image.startsWith('data:') ? undefined : `https://sharktankinsider.shop${product.image}`,
+              "offers": {
+                "@type": "Offer",
+                "price": product.price.replace(/[₹,]/g, ''),
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock"
+              },
+              "category": product.category
+            }))
+          }
+        }}
+      />
+      <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div 
@@ -185,7 +223,8 @@ const Home = () => {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 };
 
