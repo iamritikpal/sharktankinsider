@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { uploadImageToLocal } from '@/utils/imageStorage';
+import { saveProductsAndUpdateJson } from '@/utils/updateProductsJsonDirect';
 
 interface Product {
   id: number;
@@ -73,28 +74,23 @@ const Admin = ({ onLogout }: AdminProps) => {
 
   const loadProducts = () => {
     try {
-      // First try to load from localStorage
-      const savedProducts = localStorage.getItem('admin-products');
-      if (savedProducts) {
-        setProducts(JSON.parse(savedProducts));
-      } else {
-        // Fallback to loading from JSON file
-        fetch('/data/products.json')
-          .then(response => response.json())
-          .then(data => {
-            setProducts(data);
-            // Save to localStorage for future edits
-            localStorage.setItem('admin-products', JSON.stringify(data));
-          })
-          .catch(error => {
-            console.error('Error loading products:', error);
-            toast({
-              title: "Error",
-              description: "Failed to load products",
-              variant: "destructive",
-            });
+      // Always load from JSON file only
+      fetch('/data/products.json')
+        .then(response => response.json())
+        .then(data => {
+          setProducts(data);
+        })
+        .catch(error => {
+          console.error('Error loading products from JSON:', error);
+          toast({
+            title: "Error",
+            description: "Failed to load products from JSON file",
+            variant: "destructive",
           });
-      }
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } catch (error) {
       console.error('Error loading products:', error);
       toast({
@@ -102,38 +98,29 @@ const Admin = ({ onLogout }: AdminProps) => {
         description: "Failed to load products",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };
 
   const saveProducts = (newProducts: Product[]) => {
-    localStorage.setItem('admin-products', JSON.stringify(newProducts));
+    // Update products state
     setProducts(newProducts);
     
-    // Also save to a backup file that can be used in incognito mode
-    try {
-      const dataStr = JSON.stringify(newProducts, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      
-      // Create a download link for the updated products.json
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'products.json';
-      
-      // Store the blob URL for potential use
-      localStorage.setItem('admin-products-blob', url);
-      
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error creating backup:', error);
-    }
+    // Save and trigger JSON download
+    const result = saveProductsAndUpdateJson(newProducts);
     
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('productsUpdated', { 
-      detail: { products: newProducts } 
-    }));
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: "Products updated! Download the JSON file and replace public/data/products.json",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to create JSON file. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const resetForm = () => {
@@ -335,12 +322,12 @@ const Admin = ({ onLogout }: AdminProps) => {
               <p className="text-xl text-muted-foreground">
                 Manage your Shark Tank products
               </p>
-              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  <strong>Note:</strong> Changes are saved to localStorage. To make them permanent and visible in incognito mode, 
-                  use the "Export & Update JSON" button and replace the <code>public/data/products.json</code> file.
-                </p>
-              </div>
+                             <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                 <p className="text-sm text-blue-800">
+                   <strong>JSON File Mode:</strong> App loads products from public/data/products.json only. 
+                   When you add/edit products, download the updated JSON file and replace the original file.
+                 </p>
+               </div>
             </div>
             <div className="flex gap-2">
               <Button
@@ -351,27 +338,28 @@ const Admin = ({ onLogout }: AdminProps) => {
                 <RefreshCw className="w-4 h-4" />
                 Refresh
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  const dataStr = JSON.stringify(products, null, 2);
-                  const dataBlob = new Blob([dataStr], { type: 'application/json' });
-                  const url = URL.createObjectURL(dataBlob);
-                  const link = document.createElement('a');
-                  link.href = url;
-                  link.download = 'products.json';
-                  link.click();
-                  URL.revokeObjectURL(url);
-                  toast({
-                    title: "Success",
-                    description: "Products exported! Replace public/data/products.json with this file to make changes permanent.",
-                  });
-                }}
-                className="flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Export & Update JSON
-              </Button>
+                             <Button
+                 variant="outline"
+                 onClick={() => {
+                   const result = saveProductsAndUpdateJson(products);
+                   if (result.success) {
+                     toast({
+                       title: "Success",
+                       description: "Updated products.json downloaded! Replace public/data/products.json with this file.",
+                     });
+                   } else {
+                     toast({
+                       title: "Error",
+                       description: "Failed to export products.json",
+                       variant: "destructive",
+                     });
+                   }
+                 }}
+                 className="flex items-center gap-2"
+               >
+                 <Download className="w-4 h-4" />
+                 Download Updated JSON
+               </Button>
               {onLogout && (
                 <Button
                   variant="outline"

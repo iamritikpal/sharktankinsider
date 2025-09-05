@@ -23,24 +23,16 @@ const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    // Load featured products - first try localStorage (admin edits), then fallback to JSON
+    // Always load from JSON file only
     const loadFeaturedProducts = () => {
       try {
-        const savedProducts = localStorage.getItem('admin-products');
-        if (savedProducts) {
-          const data = JSON.parse(savedProducts);
-          const featured = data.filter((product: Product) => product.featured).slice(0, 3);
-          setFeaturedProducts(featured);
-        } else {
-          // Fallback to loading from JSON file
-          fetch('/data/products.json')
-            .then(response => response.json())
-            .then(data => {
-              const featured = data.filter((product: Product) => product.featured).slice(0, 3);
-              setFeaturedProducts(featured);
-            })
-            .catch(error => console.error('Error loading products:', error));
-        }
+        fetch('/data/products.json')
+          .then(response => response.json())
+          .then(data => {
+            const featured = data.filter((product: Product) => product.featured).slice(0, 3);
+            setFeaturedProducts(featured);
+          })
+          .catch(error => console.error('Error loading products from JSON:', error));
       } catch (error) {
         console.error('Error loading featured products:', error);
       }
@@ -48,24 +40,15 @@ const Home = () => {
 
     loadFeaturedProducts();
 
-    // Listen for storage changes to update featured products in real-time
-    const handleStorageChange = () => {
+    // Listen for products updates to refresh featured products
+    const handleProductsUpdate = () => {
       loadFeaturedProducts();
     };
 
-    // Listen for page focus to refresh when returning from admin
-    const handlePageFocus = () => {
-      loadFeaturedProducts();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('productsUpdated', handleStorageChange);
-    window.addEventListener('focus', handlePageFocus);
+    window.addEventListener('productsUpdated', handleProductsUpdate);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('productsUpdated', handleStorageChange);
-      window.removeEventListener('focus', handlePageFocus);
+      window.removeEventListener('productsUpdated', handleProductsUpdate);
     };
   }, []);
 

@@ -31,39 +31,25 @@ const Products = () => {
   const [urlParamsApplied, setUrlParamsApplied] = useState(false);
 
   useEffect(() => {
-    // Load products - first try localStorage (admin edits), then fallback to JSON
+    // Always load from JSON file only
     const loadProducts = () => {
       try {
-        const savedProducts = localStorage.getItem('admin-products');
-        if (savedProducts) {
-          const data = JSON.parse(savedProducts);
-          setProducts(data);
-          setFilteredProducts(data);
-          setIsLoading(false);
-          
-          // Dispatch event to notify other components
-          window.dispatchEvent(new CustomEvent('productsUpdated', { 
-            detail: { products: data } 
-          }));
-        } else {
-          // Fallback to loading from JSON file
-          fetch('/data/products.json')
-            .then(response => response.json())
-            .then(data => {
-              setProducts(data);
-              setFilteredProducts(data);
-              setIsLoading(false);
-              
-              // Dispatch event to notify other components
-              window.dispatchEvent(new CustomEvent('productsUpdated', { 
-                detail: { products: data } 
-              }));
-            })
-            .catch(error => {
-              console.error('Error loading products:', error);
-              setIsLoading(false);
-            });
-        }
+        fetch('/data/products.json')
+          .then(response => response.json())
+          .then(data => {
+            setProducts(data);
+            setFilteredProducts(data);
+            setIsLoading(false);
+            
+            // Dispatch event to notify other components
+            window.dispatchEvent(new CustomEvent('productsUpdated', { 
+              detail: { products: data } 
+            }));
+          })
+          .catch(error => {
+            console.error('Error loading products from JSON:', error);
+            setIsLoading(false);
+          });
       } catch (error) {
         console.error('Error loading products:', error);
         setIsLoading(false);
